@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Quiz App</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #ebebe0;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-success mt-3" text-align="center">
+        QUIZ APP
+      </h1>
+      <hr />
+      <div>
+        {% if score %}
+        <h1>Total Score: {{score}} out of {{question_count}}<h1>
+        {% else %}
+        {% for question in question %}
+        <br />
+        <p class="text-danger"><b>Question: {{question.Question}}</b></p>
+        <br />
+        <form method="POST">
+          {% csrf_token %}
+          <p>
+            A. {{question.Option1}}
+            <input type="radio" name="answer" id = "option_1"  value="{{question.Option1}}" />
+          </p>
+          <p>
+            B. {{question.Option2}}
+            <input type="radio" name="answer" id = "option_2" value="{{question.Option2}}" />
+          </p>
+          <p>
+            C. {{question.Option3}}
+            <input type="radio" name="answer" id = "option_3" value="{{question.Option3}}" />
+          </p>
+          <p>
+            D. {{question.Option4}}
+            <input type="radio" name="answer" id = "option_4" value="{{question.Option4}}" />
+          </p>
+          <input type="hidden" name="question" value="{{question.Question}}" />
+          {% if wrong or correct %}
+          {% if page != 10  %}
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" href="?page={{next_page }}">Next</a>
+              </li>
+            </ul>
+            {% endif %}
+          {% endif %}
+            <button class="btn btn-outline-danger" id = "save_answer" type="submit" >Save Answer</button>
+          {% if wrong or correct %}
+          <script>
+              window.addEventListener('load', (event) => {
+              console.log('page is fully loaded');
+              document.getElementById("option_1").disabled = true;
+              document.getElementById("option_2").disabled = true;
+              document.getElementById("option_3").disabled = true;
+              document.getElementById("option_4").disabled = true;
+              document.getElementById("save_answer").style.visibility = 'hidden';
+            });
+          </script>
+            {% endif %}
+          
+        </form>
+
+        {% if page == 10 and finish %}
+        <a href="?finish=true"><button class="btn btn-success" >Finish</button></a>
+        {% endif %}
+        
+        {% if wrong %}
+        <b id="UserAnswers">Incorrect Answer <br>
+          Correct Answer : {{question.Corrans}}</b>
+        {% endif %}
+        {% if correct %}
+        <b id="UserAnswers">Kudos Correct Answer<br> Keep Going!! </b>
+        {% endif %}
+
+        <b id="UserAnswers"></b>
+        {% endfor %}
+        {% endif %}
+        <!-- <h1><span id="Netscore"></span></h1> -->
+      </div>
+    </div>
+  </body>
+</html>
