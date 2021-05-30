@@ -15,8 +15,9 @@ def home(request):
         page_number = int(request.GET.get('page', '1'))
     except:
         page_number = 1
-    question = Exam.objects.filter(id = page_number)
-
+    
+    question = Exam.objects.filter(id = page_number+10)
+    print(Exam.objects.all().count())
     question_count = 10
     if page_number==question_count:
         context={"question":question,"next_page": min(question_count,page_number + 1), "prev_page": max(1, page_number - 1),"page":page_number}
